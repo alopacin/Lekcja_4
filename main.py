@@ -1,13 +1,28 @@
-
-# nadanie poczatkowych zmiennych
-stan_konta = 1000
+#nadanie poczatkowych zmiennych
 warunki = ['saldo', 'sprzedaz', 'zakup', 'konto', 'lista', 'magazyn', 'przeglad', 'koniec']
 stan_magazynu = dict()
 historia_akcji = []
 akcja = 0
+stan_konta = 1000
 
-file = open('history.txt', 'a')
+#czesc pogramu odpowiadajaca za odczyt danych z pliku tekstowego i przypisywanie wartosci do zmiennych
+filename = 'history.txt'
+with open(filename, 'r') as f:
+    for line in f:
+        if 'Stan konta' in line:
+            account, money = line.strip().split('&&')
+            stan_konta = float(money)
+        elif 'Stan magazynu' in line:
+            stan, magazyn = line.strip().split('&&')
+            for k, v in magazyn:
 
+
+            pass
+        elif 'Przegląd' in line:
+            przeglad , oglad = line.strip().split('&&')
+            historia_akcji = oglad
+print(stan_magazynu)
+print(historia_akcji)
 # wlasciwa czesc programu
 while True :
 # pytania w petli do uzytkownika
@@ -25,7 +40,6 @@ while True :
     if zapytanie not in warunki :
         print('Wpisałeś nieprawidłową wartość.Spróbuj jeszcze raz!')
         continue
-
 # dodanie i odjecie przez uzytkownika kwoty z konta
     elif zapytanie == 'saldo':
         while True :
@@ -36,9 +50,6 @@ while True :
                 print(f'Dodano {saldo} $ do konta')
                 akcja = f'Dodano {saldo} $ do konta'
                 historia_akcji.append(akcja)
-#zapisanie historii do pliku tekstowego
-                history = akcja
-                file.write('\n' + history.rstrip())
                 break
             elif zapytanie_o_saldo == 2 :
                 saldo = int(input('Wpisz kwotę: '))
@@ -46,9 +57,6 @@ while True :
                 print(f'Odjęto {saldo} $ z konta')
                 akcja = f'Odjęto {saldo} $ z konta'
                 historia_akcji.append(akcja)
-#zapisanie historii do pliku tekstowego
-                history = akcja
-                file.write('\n' + history.rstrip())
                 break
             else :
                 print('Podano nieprawidłową liczbę')
@@ -126,8 +134,10 @@ while True :
 
 # uzytkownik wpisujac koniec, konczy dzialanie programu
     elif zapytanie == 'koniec' :
-        for k, v in stan_magazynu.items():
-            file.writelines(f'\nStan magazynu: {k} : {v}')
-        file.writelines(f'\nPrzegląd: {historia_akcji}')
-        file.close()
+        with open(filename, 'w') as f:
+            f.write(f'Stan konta&&{stan_konta}')
+        with open(filename, 'a') as f:
+            for k, v in stan_magazynu.items():
+                f.write(f'\nStan magazynu&&{k} : {v}')
+            f.write(f'\nPrzegląd&&{historia_akcji}')
         break
