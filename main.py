@@ -12,13 +12,13 @@ with open(filename, 'r') as f:
         if 'Stan konta' in line:
             account, money = line.strip().split('&&')
             stan_konta = float(money)
-        elif 'Stan magazynu' in line:
-            pass
+        elif '%%' in line:
+            k, v = line.strip().split('%%')
+            stan_magazynu[k] = v
         elif '&&' in line:
             line = line.strip().replace('&&','')
             historia_akcji.append(line)
-print(stan_magazynu)
-print(historia_akcji)
+
 # wlasciwa czesc programu
 while True :
 # pytania w petli do uzytkownika
@@ -101,8 +101,9 @@ while True :
 
 # wyswietla wszystkie produkty ich ilosc i cene jakie sa w magazynie
     elif zapytanie == 'lista':
+        print('Lista produktów w magazynie:')
         for k, v in stan_magazynu.items():
-            print(f'Produkty: {k} : {v}')
+            print(f'{k} : {v}')
 
 # wyswietla tylko jeden produkt podany przez uzytkownika
     elif zapytanie == 'magazyn':
@@ -130,11 +131,13 @@ while True :
 
 # uzytkownik wpisujac koniec, konczy dzialanie programu
     elif zapytanie == 'koniec' :
+# czesc kodu odpowiadajaca za zapisywanie wartosci do pliku tekstowego history.txt
         with open(filename, 'w') as f:
             f.write(f'Stan konta&&{stan_konta}\n')
         with open(filename, 'a') as f:
             for k, v in stan_magazynu.items():
-                f.write(f'Stan magazynu&&{k} {v}\n')
+                f.write(k + '%%')
+                f.write(str(v) + '\n')
             for k in historia_akcji:
                 f.write(k + '&&\n')
         break
