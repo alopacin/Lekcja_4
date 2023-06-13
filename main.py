@@ -13,14 +13,10 @@ with open(filename, 'r') as f:
             account, money = line.strip().split('&&')
             stan_konta = float(money)
         elif 'Stan magazynu' in line:
-            stan, magazyn = line.strip().split('&&')
-            for k, v in magazyn:
-
-
             pass
-        elif 'Przegląd' in line:
-            przeglad , oglad = line.strip().split('&&')
-            historia_akcji = oglad
+        elif '&&' in line:
+            line = line.strip().replace('&&','')
+            historia_akcji.append(line)
 print(stan_magazynu)
 print(historia_akcji)
 # wlasciwa czesc programu
@@ -135,9 +131,10 @@ while True :
 # uzytkownik wpisujac koniec, konczy dzialanie programu
     elif zapytanie == 'koniec' :
         with open(filename, 'w') as f:
-            f.write(f'Stan konta&&{stan_konta}')
+            f.write(f'Stan konta&&{stan_konta}\n')
         with open(filename, 'a') as f:
             for k, v in stan_magazynu.items():
-                f.write(f'\nStan magazynu&&{k} : {v}')
-            f.write(f'\nPrzegląd&&{historia_akcji}')
+                f.write(f'Stan magazynu&&{k} {v}\n')
+            for k in historia_akcji:
+                f.write(k + '&&\n')
         break
